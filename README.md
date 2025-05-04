@@ -1,28 +1,27 @@
-# 🕵️ Fake Job Posting Detector
+🕵️ Fake Job Posting Detector
 
-This is a machine learning project that detects fake job listings using Natural Language Processing (NLP) and classification models.
+This is an end-to-end machine learning project that detects fake job listings using Natural Language Processing (NLP) and classification models. It uses a logistic regression model trained on job descriptions and company profiles to identify suspicious listings.
 
-## 🚀 How It Works
-Paste any job description into the web app and click **"Detect"**. The trained model will classify it as **Real** or **Fake**.
+🚀 Live App
 
-## 💡 Features
-- Built with Logistic Regression
-- TF-IDF Vectorizer for text features
-- Streamlit app for live demo
-- 97% model accuracy
+👉 [Click here to try it!](https://fake-job-posting-detector-6gbzxtfvkhawujkzd8m89l.streamlit.app)  
+Paste any job description and get an instant prediction — Real ✅ or Fake ⚠️.
 
-## 🧰 Tech Stack
+🧠 Model Highlights
+- 97% accuracy on test data
+- Uses TF-IDF vectorization
+- Built with Logistic Regression (lightweight and effective)
+
+🧰 Tech Stack
 - Python
 - scikit-learn
 - pandas
 - NLTK
-- Streamlit
+- Streamlit (for UI)
+- GitHub + Streamlit Cloud (for deployment)
 
-## 🔎 Try the Live App
-👉 [Link will be added after deployment]
-
-## 📁 Files in This Repo
-- `app.py`: Streamlit web app
+📁 Project Files
+- `app.py`: Streamlit app code
 - `job_fraud_model.pkl`: Trained machine learning model
-- `tfidf_vectorizer.pkl`: TF-IDF transformer
-- `requirements.txt`: List of dependencies
+- `tfidf_vectorizer.pkl`: Saved TF-IDF vectorizer
+- `requirements.txt`: Python dependencies
