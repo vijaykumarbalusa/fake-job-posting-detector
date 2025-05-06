@@ -2,12 +2,13 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
+from scipy.sparse import csr_matrix, hstack
 
 # Load model and vectorizer
 model = joblib.load("job_fraud_model.pkl")
 vectorizer = joblib.load("tfidf_vectorizer.pkl")
 
-# Red flag feature extraction
+# Red flag feature extraction function
 def extract_red_flags(text):
     text = text.lower()
     return [
@@ -20,50 +21,49 @@ def extract_red_flags(text):
         any(x in text for x in ["send your", "aadhar", "pan card", "photo id", "bank", "phone number"]),
     ]
 
-st.set_page_config(page_title="Fake Job Detector", page_icon="🕵️‍♂️")
+# Streamlit UI
+st.set_page_config(page_title="Fake Job Posting Detector", page_icon="🕵️‍♂️")
 st.title("🕵️ Fake Job Posting Detector")
-st.markdown("Paste any job description below and we'll detect if it's **real or fake** using AI and NLP.")
+st.markdown("Paste any job description or message below and we'll use AI to detect if it's **real or fake**.")
 
-# Input
-job_text = st.text_area("✍️ Paste job description here:", height=300)
+# User input
+job_text = st.text_area("✍️ Paste job posting here:", height=300)
 
 if st.button("🔍 Detect"):
     if job_text.strip() == "":
-        st.warning("Please enter a job description.")
+        st.warning("Please paste a job description to proceed.")
     else:
-        # Vectorize text
+        # Extract features
         tfidf_features = vectorizer.transform([job_text])
         red_flag_features = np.array(extract_red_flags(job_text)).reshape(1, -1)
-
-        # Combine features
-        from scipy.sparse import hstack
-        final_input = hstack([tfidf_features, red_flag_features])
+        final_input = hstack([tfidf_features, csr_matrix(red_flag_features)])
 
         # Predict
         prediction = model.predict(final_input)[0]
         probability = model.predict_proba(final_input)[0][prediction]
 
-        # Display result
+        # Result
         if prediction == 1:
-            st.error(f"⚠️ This looks like a **FAKE** job posting.")
+            st.error("⚠️ This looks like a **FAKE** job posting.")
         else:
-            st.success(f"✅ This looks like a **Genuine** job posting.")
+            st.success("✅ This looks like a **GENUINE** job posting.")
 
         st.info(f"🧠 Model Confidence: **{round(probability * 100, 2)}%**")
 
-        # Show red flags
-        flags = extract_red_flags(job_text)
+        # Show red flag explanations
         flag_names = [
             "Mentions WhatsApp",
-            "Free email domain (gmail/yahoo)",
-            "Mentions money/salary",
-            "Asks for registration fee",
-            "Urgent hiring tone",
+            "Uses free email domain (gmail/yahoo/etc)",
+            "Mentions money or salary",
+            "Requests registration fee",
+            "Urgent hiring language",
             "Mentions well-known brands",
-            "Requests personal/banking info"
+            "Asks for personal/banking info"
         ]
-        suspicious = [f for f, v in zip(flag_names, flags) if v]
-        if suspicious:
-            st.warning("🚩 Potential Red Flags Detected:")
-            for flag in suspicious:
+        flags = extract_red_flags(job_text)
+        suspicious_flags = [name for name, val in zip(flag_names, flags) if val]
+
+        if suspicious_flags:
+            st.warning("🚩 Red Flags Detected:")
+            for flag in suspicious_flags:
                 st.markdown(f"- {flag}")
