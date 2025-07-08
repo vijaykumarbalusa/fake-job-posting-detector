@@ -7,7 +7,7 @@ A Machine Learning-powered web app that detects **fake job postings** based on t
 ## 🚀 Demo
 
 ![App Screenshot](screenshot.png)  
-🌐 Try it live: [Streamlit App Link](https://fake-job-posting-detector-6gbzxtfvkhawujkzd8m89l.streamlit.ape)
+🌐 Try it live: [Streamlit App Link](https://fake-job-posting-detector-6gbzxtfvkhawujkzd8m89l.streamlit.app/
 
 ---
 
